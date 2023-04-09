@@ -1,0 +1,113 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url(../images/BackgroundImage.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.NavigationBar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    height: 50px;
+    width: 100%;
+    background-color: white;
+}
+
+.NavigationBar > .logo {
+    height: 100%;
+    width: 15%;
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.NavigationBar > .logo > .logoname{
+    font-weight: bolder;
+    font-size: 1.2em;
+}
+
+.navigation-content{
+    width: 70%;
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.nonedeco{
+    text-decoration: none;
+    color:black;
+    text-align: center;
+}
+
+.navigation-content > .introduction{
+    width: 200px;
+    text-align: center;
+    height:50%;
+    padding:15px 0px 15px 0;  
+}
+
+.navigation-content > .calorieCalculator{
+    width: 300px;
+    text-align: center;
+    height:50%;
+    padding:15px 0px 15px 0;   
+}
+
+.navigation-content{
+    height:100%;
+    width: 60%;
+}
+
+.navigation-content > .introduction > a{
+    height: 100%;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 1.2em;
+}
+
+.navigation-content > .calorieCalculator > a{
+    height: 100%;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 1.2em;
+}
+
+.NavigationBar > .logo > .logocontainer {
+    height: 100%;
+    width: 50px;
+    margin:0px;
+    padding:0px;
+    display:flex;
+    align-items: center;
+} 
+
+.NavigationBar > .logo > .logocontainer > img {
+    height: 100%;
+    margin:auto;
+}
+
+.NavigationBar > .logo > .logoname {
+    text-align:center;
+    height:50%;
+    padding: 15px 0px 15px 0px;
+}
+
+.NavigationBar > .logo > .logoname > p{
+    height:100%;
+}
+
+.NavigationBox{
+    width:100%;
+    height: 200px;
+    display:flex;
+    align-items: center;
+}

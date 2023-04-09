@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-function PersonalInfoForm({handleSubmit}) {
+function PersonalInfoForm({submitInfo}) {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
+  const [preferredExercise, setPreferredExercise] = useState('');
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={submitInfo}>
       <fieldset>
         <legend>Personal Info</legend>
 
@@ -27,7 +28,8 @@ function PersonalInfoForm({handleSubmit}) {
         <label htmlFor="weight">Weight (kg):</label>
         <input type="number" id="weight" name="weight" value={weight} onChange={(e) => setWeight(e.target.value)} required />
       
-      
+        <label htmlFor="preferredExercise">Preferred Exercise: </label>
+        <input type="text" id="preferredExercise" name="preferredExercise" value={preferredExercise} onChange={(e) => setPreferredExercise(e.target.value)} />
       </fieldset>
 
       <button type="submit">Submit</button>

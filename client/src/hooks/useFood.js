@@ -32,7 +32,6 @@ function useFood() {
 
       setIsLoading(false);
       const data = await response.json();
-      console.log(data);
 
       const totalCalories = data.foods.reduce((sum, food) => sum + food.nf_calories, 0);
       submitCalories(totalCalories);
