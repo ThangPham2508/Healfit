@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import useCalories from '../hooks/useCalories';
 
 function FoodForm({submitFood}) {
   const [foods, setFoods] = useState([{ food: "", quantity: "" }]);

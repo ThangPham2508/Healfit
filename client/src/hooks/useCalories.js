@@ -1,15 +1,30 @@
 import { useCallback, useEffect, useState } from "react";
+import useDiet from "./useDiet";
 
 function useCalories() {
   const [info, setInfo] = useState({});
   const [foodCalories, setFoodCalories] = useState(0);
   const [suggestions, setSuggestions] = useState([]);
+  const [amr, setAmr] = useState(0);
+  const [excessCalories, setExcessCalories] = useState(0);
+  const [diet, setDiet] = useState();
 
   useEffect(() => {
-    /* console.log(info);
-    console.log(calories); */
-    console.log(suggestions);
-  }, [info, foodCalories, suggestions]);
+    console.log(excessCalories, amr, foodCalories);
+    if (excessCalories > 0) {
+      getExerciseSuggestion(excessCalories);
+    } else {
+      getDietSuggestion(amr);
+    }
+  }, [excessCalories]);
+
+  useEffect(() => {
+    calculateAMR(info);
+  }, [info]);
+
+  useEffect(() => {
+    calculateRequiredCalories(amr, foodCalories);
+  }, [amr, foodCalories])
 
   const calculateAMR = (info) => {
     const weight = parseFloat(info.weight);
@@ -17,23 +32,19 @@ function useCalories() {
     const age = parseFloat(info.age);
     const gender = info.gender === "male" ? 5 : -161;
     const amr = 10 * weight + 6.25 * height - 5 * age + gender;
-    return amr;
+    setAmr(amr);
   };
 
   const calculateRequiredCalories = (amr, foodCalories) => {
     const excessCalories = amr - foodCalories;
-    return excessCalories;
+    setExcessCalories(excessCalories);
   };
 
   const submitCalories = async (calories) => {
     setFoodCalories(calories);
-    const amr = calculateAMR(info);
-    const requiredCalories = calculateRequiredCalories(amr, calories);
-    await getSuggestion(requiredCalories);
   }
 
-  const getSuggestion = async (calories) => {
-    // Make a POST request to the Nutritionix API to get exercise suggestions
+  const getExerciseSuggestion = async (calories) => {
     const exercises = info.preferredExercise || "run";
     const body = {
       query: `${calories} calories ${exercises}`,
@@ -60,11 +71,14 @@ function useCalories() {
   
       const data = await response.json();
       setSuggestions(data.exercises);
-      // Set the exercise suggestions in state or do something else with the data
     } catch (error) {
       console.error(error);
     }
   };  
+
+  const getDietSuggestion = () => {
+    
+  }
 
   const submitInfo = useCallback(async (e) => {
     e.preventDefault();
@@ -86,7 +100,6 @@ function useCalories() {
   return {
     submitCalories,
     submitInfo,
-    getSuggestion,
     suggestions,
   }
 }
