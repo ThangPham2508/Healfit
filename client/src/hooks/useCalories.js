@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import useDiet from "./useDiet";
 
 function useCalories() {
   const [info, setInfo] = useState({});
@@ -7,11 +6,20 @@ function useCalories() {
   const [suggestions, setSuggestions] = useState([]);
   const [amr, setAmr] = useState(0);
   const [excessCalories, setExcessCalories] = useState(0);
-  const [diet, setDiet] = useState();
-
-  const { getDietSuggestion } = useDiet();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (excessCalories <= 0) {
+      setSuggestions([
+        {
+          name: "No exercise needed",
+          duration_min: 0,
+          nf_calories: 0,
+        }
+      ]);
+      return;
+    }
     getExerciseSuggestion();
   }, [excessCalories]);
 
@@ -20,8 +28,7 @@ function useCalories() {
   }, [info]);
 
   useEffect(() => {
-    console.log(excessCalories, amr, foodCalories);
-    calculateRequiredCalories(amr, foodCalories);
+    calculateExcessCalories(amr, foodCalories);
   }, [amr, foodCalories])
 
   const calculateAMR = (info) => {
@@ -33,20 +40,15 @@ function useCalories() {
     setAmr(amr);
   };
 
-  const calculateRequiredCalories = (amr, foodCalories) => {
+  const calculateExcessCalories = (amr, foodCalories) => {
     const excessCalories = foodCalories - amr;
     setExcessCalories(excessCalories);
   };
 
-  const submitCalories = (calories) => {
-    console.log("Calories: " + calories);
-    setFoodCalories(calories);
-  }
-
-  const getExerciseSuggestion = async (calories) => {
+  const getExerciseSuggestion = async () => {
     const exercises = info.preferredExercise || "run";
     const body = {
-      query: `${calories} calories ${exercises}`,
+      query: `${excessCalories} calories ${exercises}`,
       gender: info.gender,
       weight_kg: info.weight,
       height_cm: info.height,
@@ -92,10 +94,47 @@ function useCalories() {
     });
   }, []);
 
+
+
+  const submitFood = async (foods) => {
+    setIsLoading(true);
+
+    const body = {
+      query: foods.map((food) => `${food.food} ${food.quantity}`).join('\n'),
+    };
+
+    try {
+      const response = await fetch('https://trackapi.nutritionix.com/v2/natural/nutrients', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-app-id': '24869883',
+          'x-app-key': '67c0154ff9b501174f90555512dc7672',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        throw new Error('Unable to submit food.');
+      }
+
+      setIsLoading(false);
+      const data = await response.json();
+
+      const totalCalories = data.foods.reduce((sum, food) => sum + food.nf_calories, 0);
+      setFoodCalories(totalCalories);
+    } catch (error) {
+      setIsLoading(false);
+      setError(error.message);
+    }
+  };
+
   return {
-    submitCalories,
     submitInfo,
+    submitFood,
     suggestions,
+    isLoading,
+    error,
   }
 }
 ;

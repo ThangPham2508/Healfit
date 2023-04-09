@@ -7,8 +7,7 @@ import useFood from "../hooks/useFood";
 import useCalories from "../hooks/useCalories";
 
 function Calculator() {
-  const { submitFood } = useFood();
-  const { submitInfo, suggestions } = useCalories();
+  const { submitInfo, submitFood, suggestions } = useCalories();
 
   return (
     <div>
