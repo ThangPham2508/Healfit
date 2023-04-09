@@ -1,7 +1,7 @@
 import React from 'react';
 
 function useDiet() {
-  const getDietSuggestion = () => {
+  const getDietSuggestion = (amr) => {
     
   }
 

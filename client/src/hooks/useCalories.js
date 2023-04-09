@@ -9,13 +9,10 @@ function useCalories() {
   const [excessCalories, setExcessCalories] = useState(0);
   const [diet, setDiet] = useState();
 
+  const { getDietSuggestion } = useDiet();
+
   useEffect(() => {
-    console.log(excessCalories, amr, foodCalories);
-    if (excessCalories > 0) {
-      getExerciseSuggestion(excessCalories);
-    } else {
-      getDietSuggestion(amr);
-    }
+    getExerciseSuggestion();
   }, [excessCalories]);
 
   useEffect(() => {
@@ -23,6 +20,7 @@ function useCalories() {
   }, [info]);
 
   useEffect(() => {
+    console.log(excessCalories, amr, foodCalories);
     calculateRequiredCalories(amr, foodCalories);
   }, [amr, foodCalories])
 
@@ -36,11 +34,12 @@ function useCalories() {
   };
 
   const calculateRequiredCalories = (amr, foodCalories) => {
-    const excessCalories = amr - foodCalories;
+    const excessCalories = foodCalories - amr;
     setExcessCalories(excessCalories);
   };
 
-  const submitCalories = async (calories) => {
+  const submitCalories = (calories) => {
+    console.log("Calories: " + calories);
     setFoodCalories(calories);
   }
 
@@ -75,10 +74,6 @@ function useCalories() {
       console.error(error);
     }
   };  
-
-  const getDietSuggestion = () => {
-    
-  }
 
   const submitInfo = useCallback(async (e) => {
     e.preventDefault();
